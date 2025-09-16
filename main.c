@@ -7,6 +7,8 @@ struct entity {
         bool active;
 };
 
+#define NUM_OF_ENEMIES 1000
+
 int main(void) {
 
         //initializing global variables
@@ -17,12 +19,15 @@ int main(void) {
         int enemyCounter = 0;
         unsigned int framesCounter = 0;
         struct entity Player = { 0, 0, 25, RED, true};
-        struct entity Enemy[10] = { 0, 0, 40, GREEN, false};
+        struct entity Enemy[NUM_OF_ENEMIES] = { 0, 0, 40, GREEN, false};
         
         //spreading the enemies against the top of the screen
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < NUM_OF_ENEMIES; i++) {
                 Enemy[i].x = GetRandomValue(0, screenHeight);
-                printf("%d", Enemy[i].x);
+                Enemy[i].y = 0;
+                Enemy[i].radius = 40;
+                Enemy[i].color = GREEN;
+                Enemy[i].active = false;
         }
 
         InitWindow(screenHeight, screenWidth, "falling balls");
@@ -36,14 +41,14 @@ int main(void) {
                 framesCounter++;
 
                 //every 5 seconds summon an enemy
-                if (((framesCounter/300)%5) == 1) {
+                if (((framesCounter/20)%2) == 1) {
                         Enemy[enemyCounter].active = true;
                         enemyCounter += 1;
                         framesCounter = 0;
                 }
                         
 
-                for(int i = 0; i < 10; i++) {
+                for(int i = 0; i < NUM_OF_ENEMIES; i++) {
                         if (Enemy[i].active == true) {
                                 Enemy[i].y += 1;
                         //if the player and the enemy collide
@@ -65,7 +70,7 @@ int main(void) {
                         DrawText(TextFormat("Score: %i", score), 10, 50, 15, BLACK); 
                         //entity drawings
                         DrawCircle(Player.x, Player.y, Player.radius, Player.color);
-                        for(int i = 0; i < 10; i++) {
+                        for(int i = 0; i < NUM_OF_ENEMIES; i++) {
                                         if (Enemy[i].active == true) {
                                                 DrawCircle(Enemy[i].x, Enemy[i].y, Enemy[i].radius, Enemy[i].color);
                                 }
